@@ -41,7 +41,7 @@ export class PieChartCtrl extends MetricsPanelCtrl {
 
     this.events.on('render', this.onRender.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
-    this.events.on('data-error', this.onDataError.bind(this));
+    // this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
   }
@@ -51,23 +51,9 @@ export class PieChartCtrl extends MetricsPanelCtrl {
     this.unitFormats = kbn.getUnitFormats();
   }
 
-  setUnitFormat(subItem) {
-    this.panel.format = subItem.value;
-    this.render();
-  }
-
-  onDataError() {
-    this.series = [];
-    this.render();
-  }
-
-  changeSeriesColor(series, color) {
-    series.color = color;
-    this.panel.aliasColors[series.alias] = series.color;
-    this.render();
-  }
-
   onRender() {
+    console.log("On render!")
+    console.log(this.series);
     this.data = this.parseSeries(this.series);
   }
 
@@ -82,6 +68,8 @@ export class PieChartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
+    console.log("Received data!")
+    // console.log(dataList)
     this.series = dataList.map(this.seriesHandler.bind(this));
     this.data = this.parseSeries(this.series);
     this.render(this.data);

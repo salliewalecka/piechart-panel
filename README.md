@@ -1,3 +1,6 @@
+To Run Grafana
+grafana-server --config=/usr/local/etc/grafana/grafana.ini --homepath /usr/local/share/grafana cfg:default.paths.logs=/usr/local/var/log/grafana cfg:default.paths.data=/usr/local/var/lib/grafana cfg:default.paths.plugins=/Users/swalecka/grafana-plugings
+
 Use the new grafana-cli tool to install piechart-panel from the commandline:
 
 ```

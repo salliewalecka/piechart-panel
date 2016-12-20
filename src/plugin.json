@@ -1,13 +1,13 @@
 {
   "type": "panel",
-  "name": "Pie Chart",
+  "name": "Sal's Wonderful List",
   "id": "grafana-piechart-panel",
 
   "info": {
-    "description": "Pie chart panel for grafana",
+    "description": "sallie's plugin",
     "author": {
-      "name": "Raintank Inc.",
-      "url": "http://raintank.io"
+      "name": "PLugin team",
+      "url": "http://thoughtworks.go/"
     },
     "keywords": ["piechart", "panel"],
     "logos": {
@@ -19,13 +19,7 @@
       {"name": "Blog Post", "url": "https://blog.raintank.io/friends-dont-let-friends-abuse-pie-charts/"},
       {"name": "MIT License", "url": "https://github.com/grafana/piechart-panel/blob/master/LICENSE"}
     ],
-    "screenshots": [
-      {"name": "Donut!", "path": "src/img/piechart-donut.png"},
-      {"name": "Legend on the graph", "path": "src/img/piechart-legend-on-graph.png"},
-      {"name": "Legend to the right", "path": "src/img/piechart-legend-rhs.png"},
-      {"name": "Legend underneath", "path": "src/img/piechart-legend-under.png"},
-      {"name": "Piechart options", "path": "src/img/piechart-options.png"}
-    ],
+    "screenshots": [],
     "version": "1.1.4",
     "updated": "2016-09-26"
   },
