@@ -1,8 +1,9 @@
 <div class="graph-wrapper" ng-class="{'graph-legend-rightside': ctrl.panel.legendType == 'Right side'}">
-	SAllie wins
-	<!-- <div class="graph-canvas-wrapper">
-		<div class="piechart-panel" style="position: relative; padding: 0;"></div>
-	</div>
-	<div class="graph-legend-wrapper" ng-if="ctrl.panel.legend.show" piechart-legend></div> -->
+    <div ng-if="ctrl.panel.dataExists">The job that waited the longest was: {{ctrl.longest.label}}</div>
+		<div ng-if="ctrl.panel.dataExists">Over time, it has waited {{ctrl.longest.data}} seconds</div>
+    <!-- <div class="graph-canvas-wrapper">
+        <div class="piechart-panel" style="position: relative; padding: 0;"></div>
+    </div>
+    <div class="graph-legend-wrapper" ng-if="ctrl.panel.legend.show" piechart-legend></div> -->
 </div>
 <div class="clearfix"></div>

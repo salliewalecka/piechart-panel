@@ -22,6 +22,7 @@ export class PieChartCtrl extends MetricsPanelCtrl {
       maxDataPoints: 3,
       interval: null,
       targets: [{}],
+      dataExists: false,
       cacheTimeout: null,
       nullPointMode: 'connected',
       legendType: 'Under graph',
@@ -41,18 +42,11 @@ export class PieChartCtrl extends MetricsPanelCtrl {
 
     this.events.on('render', this.onRender.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
-    // this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
-    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-  }
-
-  onInitEditMode() {
-    this.addEditorTab('Options', 'public/plugins/grafana-piechart-panel/editor.html', 2);
-    this.unitFormats = kbn.getUnitFormats();
   }
 
   onRender() {
-    console.log("On render!")
+    console.log("On render!");
     console.log(this.series);
     this.data = this.parseSeries(this.series);
   }
@@ -68,12 +62,31 @@ export class PieChartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-    console.log("Received data!")
-    // console.log(dataList)
-    this.series = dataList.map(this.seriesHandler.bind(this));
-    this.data = this.parseSeries(this.series);
-    this.render(this.data);
-  }
+      console.log("Received data!")
+      this.series = dataList.map(this.seriesHandler.bind(this));
+      this.data = this.parseSeries(this.series);
+      this.render(this.data);
+      console.log(this.data)
+      this.longest = this.findMax(this.data)
+      this.longest.label = this.cleanupJobName(this.longest.label)
+      this.panel.dataExists = true;
+      console.log("max is " + this.longest.data)
+    }
+
+    cleanupJobName(name){
+      return name.substring(name.indexOf(":") + 1, name.length - 1)
+    }
+
+    findMax(jobs) {
+      var maxLength = Math.max.apply(Math, jobs.map(function(job){return job.data}))
+      console.log("Max is " + maxLength)
+      var longestJob = jobs.find((job) => {
+        console.log("Job is ")
+        console.log(job)
+        return job.data == maxLength
+      })
+      return longestJob
+    }
 
   seriesHandler(seriesData) {
     var series = new TimeSeries({
@@ -83,54 +96,6 @@ export class PieChartCtrl extends MetricsPanelCtrl {
 
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     return series;
-  }
-
-  getDecimalsForValue(value) {
-    if (_.isNumber(this.panel.decimals)) {
-      return { decimals: this.panel.decimals, scaledDecimals: null };
-    }
-
-    var delta = value / 2;
-    var dec = -Math.floor(Math.log(delta) / Math.LN10);
-
-    var magn = Math.pow(10, -dec);
-    var norm = delta / magn; // norm is between 1.0 and 10.0
-    var size;
-
-    if (norm < 1.5) {
-      size = 1;
-    } else if (norm < 3) {
-      size = 2;
-      // special case for 2.5, requires an extra decimal
-      if (norm > 2.25) {
-        size = 2.5;
-        ++dec;
-      }
-    } else if (norm < 7.5) {
-      size = 5;
-    } else {
-      size = 10;
-    }
-
-    size *= magn;
-
-    // reduce starting decimals if not needed
-    if (Math.floor(value) === value) { dec = 0; }
-
-    var result = {};
-    result.decimals = Math.max(0, dec);
-    result.scaledDecimals = result.decimals - Math.floor(Math.log(size) / Math.LN10) + 2;
-
-    return result;
-  }
-
-  formatValue(value) {
-    var decimalInfo = this.getDecimalsForValue(value);
-    var formatFunc = kbn.valueFormats[this.panel.format];
-    if (formatFunc) {
-      return formatFunc(value, decimalInfo.decimals, decimalInfo.scaledDecimals);
-    }
-    return value;
   }
 
   link(scope, elem, attrs, ctrl) {
